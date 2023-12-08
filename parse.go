@@ -48,7 +48,11 @@ func eachStatement(src []byte, callback func([]byte)) {
 func environmentPair(src []byte) (string, string, error) {
 	index := bytes.IndexRune(src, '=')
 
-	key := bytes.TrimLeftFunc(bytes.TrimPrefix(bytes.TrimSpace(src[:index]), []byte("export")), unicode.IsSpace)
+	key := bytes.TrimSpace(src[:index])
+	// export needs to have a space separating afterward to be a valid keyword
+	if bytes.HasPrefix(key, []byte("export")) && unicode.IsSpace(rune(key[len([]byte("export"))])) {
+		key = bytes.TrimLeftFunc(bytes.TrimPrefix(key, []byte("export")), unicode.IsSpace)
+	}
 	for _, b := range key {
 		r := rune(b)
 		switch r {
