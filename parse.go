@@ -2,6 +2,7 @@ package godotenvcrypt
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"unicode"
 )
@@ -47,6 +48,9 @@ func eachStatement(src []byte, callback func([]byte)) {
 
 func environmentPair(src []byte) (string, string, error) {
 	index := bytes.IndexRune(src, '=')
+	if index == -1 {
+		return "", "", errors.New("No valid separator ('=') found")
+	}
 
 	key := bytes.TrimSpace(src[:index])
 	// export needs to have a space separating afterward to be a valid keyword
