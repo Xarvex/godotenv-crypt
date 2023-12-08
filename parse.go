@@ -70,7 +70,12 @@ func environmentPair(src []byte) (string, string, error) {
 	}
 
 	// TODO: more validation on value needed
-	value := bytes.TrimSpace(src[index+1:])
+	value := bytes.TrimLeftFunc(src[index+1:], unicode.IsSpace)
+	// trim inline comment
+	if index := bytes.LastIndexByte(value, byte('#')); index != -1 {
+		value = value[:index]
+	}
+	value = bytes.TrimRightFunc(value, unicode.IsSpace)
 
 	return string(key), string(value), nil
 }
