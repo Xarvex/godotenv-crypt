@@ -55,11 +55,15 @@ func environmentPair(src []byte) (string, string, error) {
 	}
 	for _, b := range key {
 		r := rune(b)
-		switch r {
-		case '.':
-		case '_':
+		switch {
+		case unicode.IsLetter(r):
+		case unicode.IsDigit(r):
+		case unicode.IsSpace(r):
 		default:
-			if !(unicode.IsLetter(r) || unicode.IsDigit(r) || unicode.IsSpace(r)) {
+			switch r {
+			case '.':
+			case '_':
+			default:
 				return "", "", fmt.Errorf("Invalid character %q in key %q", string(r), string(key))
 			}
 		}
