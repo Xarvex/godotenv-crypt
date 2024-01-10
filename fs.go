@@ -15,14 +15,16 @@ func readFile(name string) ([]byte, error) {
 	}
 }
 
-func readFiles(names []string, callback func([]byte)) error {
+func readFiles(names []string, callback func([]byte) error) error {
 	for _, name := range names {
 		content, err := readFile(name)
 		if err != nil {
 			return err
 		}
 
-		callback(content)
+		if err := callback(content); err != nil {
+			return err
+		}
 	}
 
 	return nil

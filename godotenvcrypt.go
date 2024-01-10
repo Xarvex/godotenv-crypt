@@ -1,34 +1,48 @@
 package godotenvcrypt
 
-import (
-	"fmt"
-	"io/fs"
-)
+import "io/fs"
 
 func SetFS(filesystem fs.FS) {
 	fsys = filesystem
 }
 
-func Parse(src []byte) (map[string]string, error) {
-	var environment map[string]string
-	eachStatement(src, func(b []byte) {
-		var key, value string
-		key, value, _ = environmentPair(b)
-		fmt.Println(key, value)
+func Parse(source []byte) (map[string]string, error) {
+	var env map[string]string
+	eachStatement(source, func(b []byte) {
+		key, value, _ := environmentPair(b)
+		env[key] = value
 	})
 
-	return environment, nil
+	return env, nil
+}
+
+func Read(filenames ...string) (map[string]string, error) {
+	var env map[string]string
+	if err := readFiles(filenames, func(b []byte) error {
+		fileEnv, err := Parse(b)
+		if err != nil {
+			return err
+		}
+
+		for key, value := range fileEnv {
+			env[key] = value
+		}
+
+		return nil
+	}); err != nil {
+		return env, err
+	}
+
+	return env, nil
 }
 
 func Load(filenames ...string) error {
-	if len(filenames) == 0 {
-		filenames = []string{".env"}
-	}
-	if err := readFiles(filenames, func(b []byte) {
-		Parse(b)
-	}); err != nil {
+	env, err := Read(filenames...)
+	if err != nil {
 		return err
 	}
+
+	SetAll(env)
 
 	return nil
 }
