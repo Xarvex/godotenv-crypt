@@ -28,22 +28,28 @@ func nextStatement(src []byte) (int, int) {
 	return index, bytes.IndexAny(src[index:], "\r\n") // size of line
 }
 
-func eachStatement(src []byte, callback func([]byte)) {
+func eachStatement(src []byte, callback func([]byte) error) error {
 	var size int
 	for ; size != -1; src = src[size:] {
 		var index int
 		index, size = nextStatement(src)
 		if index == -1 {
-			return
+			return nil
 		}
 
 		src = src[index:]
+		var err error
 		if size == -1 {
-			callback(src)
+			err = callback(src)
 		} else {
-			callback(src[:size])
+			err = callback(src[:size])
+		}
+		if err != nil {
+			return err
 		}
 	}
+
+	return nil
 }
 
 func environmentPair(src []byte) (string, string, error) {

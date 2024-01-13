@@ -8,10 +8,18 @@ func SetFS(filesystem fs.FS) {
 
 func Parse(source []byte) (map[string]string, error) {
 	var env map[string]string
-	eachStatement(source, func(b []byte) {
-		key, value, _ := environmentPair(b)
+	if err := eachStatement(source, func(b []byte) error {
+		key, value, err := environmentPair(b)
+		if err != nil {
+			return err
+		}
+
 		env[key] = value
-	})
+
+		return nil
+	}); err != nil {
+		return env, err
+	}
 
 	return env, nil
 }
