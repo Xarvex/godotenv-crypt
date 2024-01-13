@@ -1,7 +1,7 @@
 package godotenvcrypt
 
 func Parse(source []byte) (map[string]string, error) {
-	var env map[string]string
+	env := make(map[string]string)
 	if err := eachStatement(source, func(b []byte) error {
 		key, value, err := environmentPair(b)
 		if err != nil {
@@ -19,7 +19,7 @@ func Parse(source []byte) (map[string]string, error) {
 }
 
 func Read(filenames ...string) (map[string]string, error) {
-	var env map[string]string
+	env := make(map[string]string)
 	if err := readFiles(filenames, func(b []byte) error {
 		fileEnv, err := Parse(b)
 		if err != nil {
