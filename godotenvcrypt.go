@@ -1,11 +1,5 @@
 package godotenvcrypt
 
-import "io/fs"
-
-func SetFS(filesystem fs.FS) {
-	fsys = filesystem
-}
-
 func Parse(source []byte) (map[string]string, error) {
 	var env map[string]string
 	if err := eachStatement(source, func(b []byte) error {

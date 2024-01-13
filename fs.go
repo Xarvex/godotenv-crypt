@@ -7,6 +7,10 @@ import (
 
 var fsys fs.FS
 
+func SetFS(filesystem fs.FS) {
+	fsys = filesystem
+}
+
 func readFile(name string) ([]byte, error) {
 	if fsys == nil {
 		return os.ReadFile(name)
