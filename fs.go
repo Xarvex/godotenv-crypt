@@ -20,6 +20,10 @@ func readFile(name string) ([]byte, error) {
 }
 
 func readFiles(names []string, callback func([]byte) error) error {
+	if names == nil {
+		names = []string{".env"}
+	}
+
 	for _, name := range names {
 		content, err := readFile(name)
 		if err != nil {
