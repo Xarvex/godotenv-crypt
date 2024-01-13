@@ -1,8 +1,9 @@
 #!/bin/sh
 
-script_dir="$(dirname "${0}")/.."
+script_dir="$(readlink -f "$(dirname "$(readlink -f "${0}")")"/..)"
+cd "${script_dir}" || exit 1
 
-mkdir -p "${script_dir}/bin"
-go build "${script_dir}" -o "${script_dir}bin/test"
+mkdir -p bin
+go build -o bin/test
 
-"${script_dir}/bin/test"
+bin/test
