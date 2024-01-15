@@ -1,1 +1,1 @@
-package godotenvcrypt
+package envcrypt

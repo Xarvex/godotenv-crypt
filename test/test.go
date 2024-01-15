@@ -2,13 +2,13 @@ package main
 
 import (
 	"embed"
-	"xarvex/godotenvcrypt"
+	"xarvex/envcrypt"
 )
 
 //go:embed .env
 var dotenv embed.FS
 
 func main() {
-	godotenvcrypt.SetFS(dotenv)
-	godotenvcrypt.Load()
+	envcrypt.SetFS(dotenv)
+	envcrypt.Load()
 }

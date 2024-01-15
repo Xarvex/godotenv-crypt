@@ -1,4 +1,4 @@
-package godotenvcrypt
+package envcrypt
 
 import (
 	"bytes"

@@ -1,4 +1,4 @@
-package godotenvcrypt
+package envcrypt
 
 func Parse(source []byte) (map[string]string, error) {
 	env := make(map[string]string)
